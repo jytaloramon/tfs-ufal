@@ -1,4 +1,4 @@
-package br.ufal.aracomp.cosmos.limiteconetorrmi.spec.dt;
+package br.ufal.aracomp.cosmos.limiteconectorrmi.spec.dt;
 
 public class ClientDTConector {
 	

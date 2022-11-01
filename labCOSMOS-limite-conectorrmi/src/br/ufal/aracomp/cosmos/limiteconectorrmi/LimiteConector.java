@@ -1,12 +1,12 @@
-package br.ufal.aracomp.cosmos.limiteconetorrmi;
+package br.ufal.aracomp.cosmos.limiteconectorrmi;
 
 import java.rmi.server.RemoteObject;
 
-import br.ufal.aracomp.cosmos.limiteconetorrmi.limiteop.ICalculaLimiteConector;
-import br.ufal.aracomp.cosmos.limiteconetorrmi.spec.dt.ClientDTConector;
 import br.ufal.aracomp.cosmos.limite.spec.dt.ClienteDT;
 import br.ufal.aracomp.cosmos.limite.spec.prov.ILimiteOps;
 import br.ufal.aracomp.cosmos.limite.spec.prov.IManager;
+import br.ufal.aracomp.cosmos.limiteconectorrmi.limiteop.ICalculaLimiteConector;
+import br.ufal.aracomp.cosmos.limiteconectorrmi.spec.dt.ClientDTConector;
 
 public class LimiteConector extends RemoteObject implements ICalculaLimiteConector {
 
