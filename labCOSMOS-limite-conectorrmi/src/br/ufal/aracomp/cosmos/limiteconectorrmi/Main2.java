@@ -10,18 +10,18 @@ import java.rmi.registry.Registry;
 
 import br.ufal.aracomp.cosmos.limite.impl.ComponentFactory;
 
-public class Main {
+public class Main2 {
 
-	private static final String NAME = "SERVER 1";
+	private static final String NAME = "SERVER 2";
 	private static final String HOST = "localhost";
-	private static final int PORT = 1096;
+	private static final int PORT = 1097;
 
 	public static void main(String[] args) {
 
 		IManager manageLimite = ComponentFactory.createInstance();
 
 		try {
-			ICalculaLimiteConector calculaLimiteConector = new LimiteConector(NAME, manageLimite);
+			ICalculaLimiteConector calculaLimiteConector = new LimiteConector(NAME,	manageLimite);
 
 			Registry registry = LocateRegistry.createRegistry(PORT);
 			registry.bind("calculalimite", calculaLimiteConector);

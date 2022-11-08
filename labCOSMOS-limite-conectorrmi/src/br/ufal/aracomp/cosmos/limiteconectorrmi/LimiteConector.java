@@ -15,18 +15,23 @@ public class LimiteConector extends UnicastRemoteObject implements ICalculaLimit
 
 	private final IManager manager;
 
-	public LimiteConector(IManager manager) throws RemoteException {
+	private final String name;
+
+	public LimiteConector(String name, IManager manager) throws RemoteException {
 		super();
+		this.name = name;
 		this.manager = manager;
 	}
 
 	@Override
 	public double calculaLimite(ClientDTConector clientDTConector) {
 		ILimiteOps limiteOps = (ILimiteOps) manager.getProvidedInterface("ILimiteOps");
-		
+
 		ClienteDT clienteDT = new ClienteDT();
 		clienteDT.salario = clientDTConector.salario;
-		
+
+		System.out.println("ServerName: " + this.name + ", Rendimento: " + clienteDT.salario);
+
 		return limiteOps.calcularLimite(clienteDT);
 	}
 
