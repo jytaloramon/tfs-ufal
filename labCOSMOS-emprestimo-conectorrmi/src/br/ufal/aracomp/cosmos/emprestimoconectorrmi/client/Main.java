@@ -1,4 +1,4 @@
-package br.ufal.aracomp.cosmos.emprestimoconectorrmi;
+package br.ufal.aracomp.cosmos.emprestimoconectorrmi.client;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -8,20 +8,26 @@ import java.rmi.RemoteException;
 import br.ufal.aracomp.cosmos.emprestimo.impl.ComponentFactory;
 import br.ufal.aracomp.cosmos.emprestimo.spec.dt.UsuarioDT;
 import br.ufal.aracomp.cosmos.emprestimo.spec.prov.IEmprestimoOps;
-import br.ufal.aracomp.cosmos.emprestimo.spec.prov.IManager;	
-import br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance.CalculaLimiteEntityLoadBalance;
-import br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance.ManagerCalculaLimiteConector;
+import br.ufal.aracomp.cosmos.emprestimo.spec.prov.IManager;
+import br.ufal.aracomp.cosmos.emprestimoconectorrmi.EmprestimoConector;
+import br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance.EntityLoadBalance;
+import br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance.ICalculaLimiteConectorEntityLoadBalance;
+import br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance.ILoadBalanceStrategy;
+import br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance.RoundRobinWeightedLoadBalance;
 import br.ufal.aracomp.cosmos.limiteconectorrmi.limiteop.ICalculaLimiteConector;
 
 public class Main {
 
 	private static final String HOST1 = "localhost";
-	private static final String PORT1 = "1096";
+	private static final String PORT1 = "1098";
 
 	private static final String HOST2 = "localhost";
-	private static final String PORT2 = "1097";
+	private static final String PORT2 = "1099";
 
 	private static final String SERVICE = "calculalimite";
+
+	private static final int REQUEST_MAX = 10;
+	private static final int MAX_VALUE_AMOUNT = 10000;
 
 	public static void main(String[] args) {
 
@@ -31,26 +37,27 @@ public class Main {
 			ICalculaLimiteConector calculaLimiteConector = (ICalculaLimiteConector) Naming
 					.lookup("rmi://" + HOST1 + ":" + PORT1 + "/" + SERVICE);
 
-			ICalculaLimiteConector calculaLimiteConecto2 = (ICalculaLimiteConector) Naming
+			ICalculaLimiteConector calculaLimiteConector2 = (ICalculaLimiteConector) Naming
 					.lookup("rmi://" + HOST2 + ":" + PORT2 + "/" + SERVICE);
 
-			CalculaLimiteEntityLoadBalance[] calculaLimiteEntityLoadBalances = new CalculaLimiteEntityLoadBalance[] {
-					new CalculaLimiteEntityLoadBalance(5, calculaLimiteConector),
-					new CalculaLimiteEntityLoadBalance(2, calculaLimiteConecto2) };
+			EntityLoadBalance<ICalculaLimiteConector>[] entitiesLoadBalance = new ICalculaLimiteConectorEntityLoadBalance[] {
+					new ICalculaLimiteConectorEntityLoadBalance(5, calculaLimiteConector),
+					new ICalculaLimiteConectorEntityLoadBalance(2, calculaLimiteConector2) };
 
-			managerEmprestimo.setRequiredInterface("ILimiteReq",
-					new EmprestimoConector(new ManagerCalculaLimiteConector(calculaLimiteEntityLoadBalances)));
+			ILoadBalanceStrategy<ICalculaLimiteConector> loadBalanceStrategy = new RoundRobinWeightedLoadBalance<>(
+					entitiesLoadBalance);
 
-			int loopMax = 8;
+			managerEmprestimo.setRequiredInterface("ILimiteReq", new EmprestimoConector(loadBalanceStrategy));
 
-			for (int i = 0; i < loopMax; ++i) {
+			for (int i = 0; i < REQUEST_MAX; ++i) {
 				UsuarioDT usuarioDT = new UsuarioDT();
-				usuarioDT.rendimentos = String.valueOf(Math.random() * 10000);
+				usuarioDT.rendimentos = String.valueOf(Math.random() * MAX_VALUE_AMOUNT);
 
 				IEmprestimoOps emprestimoOps = (IEmprestimoOps) managerEmprestimo
 						.getProvidedInterface("IEmprestimoOps");
 				System.out.println("Redimento: " + usuarioDT.rendimentos);
 				System.out.println("Emprestimo: " + emprestimoOps.liberarEmprestimoAutomatico(usuarioDT));
+				System.out.println();
 
 				Thread.sleep(1000);
 			}

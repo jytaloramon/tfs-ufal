@@ -1,7 +1,7 @@
 package br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance;
 
-public interface ILoadBalance<T> {
+public interface ILoadBalanceStrategy<T> {
 
 	public T getInstance();
-	
+
 }

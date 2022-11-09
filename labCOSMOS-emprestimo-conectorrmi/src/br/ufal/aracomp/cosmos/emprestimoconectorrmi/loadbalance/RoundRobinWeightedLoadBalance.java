@@ -1,21 +1,20 @@
 package br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance;
 
-import br.ufal.aracomp.cosmos.limiteconectorrmi.limiteop.ICalculaLimiteConector;
+public class RoundRobinWeightedLoadBalance<T> implements ILoadBalanceStrategy<T> {
 
-public class ManagerCalculaLimiteConector implements ILoadBalance<ICalculaLimiteConector> {
-
-	private final EntityLoadBalance<ICalculaLimiteConector>[] entities;
+	private final EntityLoadBalance<T>[] entities;
 
 	private int actualIndex;
+
 	private int actualCount;
 
-	public ManagerCalculaLimiteConector(CalculaLimiteEntityLoadBalance entityLoadBalance[]) {
+	public RoundRobinWeightedLoadBalance(EntityLoadBalance<T>[] entities) {
+		this.entities = entities;
 		this.actualIndex = this.actualCount = 0;
-		this.entities = entityLoadBalance;
 	}
 
 	@Override
-	public ICalculaLimiteConector getInstance() {
+	public T getInstance() {
 		if (entities[actualIndex].getWeight() <= actualCount) {
 			nextIndex();
 			resetCount();
@@ -37,4 +36,5 @@ public class ManagerCalculaLimiteConector implements ILoadBalance<ICalculaLimite
 	private void resetCount() {
 		actualCount = 0;
 	}
+
 }

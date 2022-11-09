@@ -4,17 +4,17 @@ import java.rmi.RemoteException;
 
 import br.ufal.aracomp.cosmos.emprestimo.spec.dt.UsuarioDT;
 import br.ufal.aracomp.cosmos.emprestimo.spec.req.ILimiteReq;
-import br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance.ILoadBalance;
+import br.ufal.aracomp.cosmos.emprestimoconectorrmi.loadbalance.ILoadBalanceStrategy;
 import br.ufal.aracomp.cosmos.limiteconectorrmi.limiteop.ICalculaLimiteConector;
 import br.ufal.aracomp.cosmos.limiteconectorrmi.spec.dt.ClientDTConector;
 
 public class EmprestimoConector implements ILimiteReq {
 
-	private final ILoadBalance<ICalculaLimiteConector> loadBalance;
+	private final ILoadBalanceStrategy<ICalculaLimiteConector> loadBalanceStrategy;
 
-	public EmprestimoConector(ILoadBalance<ICalculaLimiteConector> loadBalance) throws RemoteException {
+	public EmprestimoConector(ILoadBalanceStrategy<ICalculaLimiteConector> loadBalanceStrategy) throws RemoteException {
 		super();
-		this.loadBalance = loadBalance;
+		this.loadBalanceStrategy = loadBalanceStrategy;
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class EmprestimoConector implements ILimiteReq {
 		clientDTConector.salario = Double.parseDouble(usuario.rendimentos);
 
 		try {
-			return loadBalance.getInstance().calculaLimite(clientDTConector);
+			return loadBalanceStrategy.getInstance().calculaLimite(clientDTConector);
 		} catch (RemoteException e) {
 			throw new RuntimeException(e);
 		}

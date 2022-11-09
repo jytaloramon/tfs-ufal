@@ -15,11 +15,10 @@ public class LimiteConector extends UnicastRemoteObject implements ICalculaLimit
 
 	private final IManager manager;
 
-	private final String name;
+	private int countRequests = 1;
 
-	public LimiteConector(String name, IManager manager) throws RemoteException {
+	public LimiteConector(IManager manager) throws RemoteException {
 		super();
-		this.name = name;
 		this.manager = manager;
 	}
 
@@ -30,7 +29,8 @@ public class LimiteConector extends UnicastRemoteObject implements ICalculaLimit
 		ClienteDT clienteDT = new ClienteDT();
 		clienteDT.salario = clientDTConector.salario;
 
-		System.out.println("ServerName: " + this.name + ", Rendimento: " + clienteDT.salario);
+		System.out.println("-> (" + countRequests + ") Requisição (Calcula limite): " + clienteDT.salario);
+		countRequests++;
 
 		return limiteOps.calcularLimite(clienteDT);
 	}
