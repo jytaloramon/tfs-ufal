@@ -26,8 +26,9 @@ public class Main {
 
 	private static final String SERVICE = "calculalimite";
 
-	private static final int REQUEST_MAX = 10;
-	private static final int MAX_VALUE_AMOUNT = 10000;
+	private static final int REQUEST_MAX = 15;
+	private static final int COEF_VALUE = 9000;
+	private static final int PADDING_VALUE = 1000;
 
 	public static void main(String[] args) {
 
@@ -51,7 +52,7 @@ public class Main {
 
 			for (int i = 0; i < REQUEST_MAX; ++i) {
 				UsuarioDT usuarioDT = new UsuarioDT();
-				usuarioDT.rendimentos = String.valueOf(Math.random() * MAX_VALUE_AMOUNT);
+				usuarioDT.rendimentos = String.valueOf(PADDING_VALUE + Math.random() * COEF_VALUE	);
 
 				IEmprestimoOps emprestimoOps = (IEmprestimoOps) managerEmprestimo
 						.getProvidedInterface("IEmprestimoOps");
