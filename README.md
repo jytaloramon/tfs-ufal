@@ -14,3 +14,47 @@ As dúvidas podem ser esclarecidas nas aulas, ok?
 A entrega da atividade consiste em um vídeo (individual) de até 5 minutos, explicando o funcionamento da sua implementação. Poste aqui apenas o link do vídeo, ok?
 
 OBS.: o apresentador deve aparecer no vídeo da gravação.
+
+## Solução
+
+### Construção do(s) Projeto(s) - Terminal
+ 
+```bash
+# Limpar binários (/bin):
+$ make clean
+
+# Limpar pasta de binários - somente conteúdo interno
+$ make clean-content
+
+# -----------------
+# Compilar(Javac)
+
+## Servidor 1 - Limite Conector 1
+$ make compile-server-limite
+
+## Servidor 2 - Limite Conector 2
+$ make compile-server2-limite
+
+## Cliente - Emprestimo Conector
+$ make compile-client-emprestimo
+```
+
+### Executar Projetos - Terminal
+
+```bash
+# Abra 3 abas do terminal.
+# Entre "ProjetoDeInteresse\bin" e execute o Main.class
+
+# Aba 1
+$ cd labCOSMOS-limite-conectorrmi-server/bin
+$ java br.ufal.aracomp.cosmos.limiteconectorrmiserver.Main
+
+# Aba 2
+$ cd labCOSMOS-limite-conectorrmi-server2/bin
+$ java br.ufal.aracomp.cosmos.limiteconectorrmiserver2.Main
+
+# Aba 3
+$ cd labCOSMOS-emprestimo-conectorrmi/bin 
+$ java br.ufal.aracomp.cosmos.emprestimoconectorrmi.client.Main
+
+```
